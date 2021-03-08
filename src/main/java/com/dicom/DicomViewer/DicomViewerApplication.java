@@ -18,11 +18,13 @@
 /* Package statement*/
 package com.dicom.DicomViewer;
 
+
 /* import statements
  * for Spring Boot
  */
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 
 /**
  * @class DicomViewerApplication
@@ -44,5 +46,6 @@ public class DicomViewerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DicomViewerApplication.class, args);
 	}
+
 
 }
