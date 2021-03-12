@@ -1,10 +1,5 @@
-RUN apt-get install -y --no-install-recommends software-properties-common
-RUN add-apt-repository -y ppa:openjdk-r/ppa
-RUN apt-get update
-RUN apt-get install -y openjdk-8-jdk
-RUN apt-get install -y openjdk-8-jre
-RUN update-alternatives --config java
-RUN update-alternatives --config javac
+FROM ubuntu:latest
+
 # EXPOSE 8443
 RUN apt update
 ARG DEBIAN_FRONTEND=noninteractive
@@ -30,6 +25,7 @@ RUN apt install ./dicomparser_1.0-1.deb
 COPY 0003.DCM .
 ENV LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu/:/usr/local/jisnalib/"
 ADD dicom_parserstorage dicom_parserstorage
+ENTRYPOINT ["dicom_parserstorage","0003.DCM"]
 # ADD DicomViewer.jar DicomViewer.jar
 # ENTRYPOINT ["java","-jar","/DicomViewer.jar"]
 
