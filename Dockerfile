@@ -1,4 +1,4 @@
-FROM scratch
+FROM ubuntu:latest
 
 # Install OpenJDK-8
 RUN apt-get update && \
@@ -16,7 +16,6 @@ RUN apt-get update && \
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 RUN export JAVA_HOME
 EXPOSE 8443
-RUN apt update
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt install gcc wget -y
 RUN apt install build-essential -y
@@ -40,7 +39,6 @@ RUN apt install ./dicomparser_1.0-1.deb
 COPY 0003.DCM .
 ENV LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu/:/usr/local/jisnalib/"
 ADD dicom_parserstorage dicom_parserstorage
-# ENTRYPOINT ["dicom_parserstorage","0003.DCM"]
 ADD DicomViewer.jar DicomViewer.jar
 ENTRYPOINT ["java","-jar","/DicomViewer.jar"]
 
