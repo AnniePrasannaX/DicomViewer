@@ -1,6 +1,21 @@
 FROM ubuntu:latest
 
-# EXPOSE 8443
+# Install OpenJDK-8
+RUN apt-get update && \
+    apt-get install -y openjdk-8-jdk && \
+    apt-get install -y ant && \
+    apt-get clean;
+
+# Fix certificate issues
+RUN apt-get update && \
+    apt-get install ca-certificates-java && \
+    apt-get clean && \
+    update-ca-certificates -f;
+
+# Setup JAVA_HOME -- useful for docker commandline
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
+RUN export JAVA_HOME
+EXPOSE 8443
 RUN apt update
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt install gcc wget -y
@@ -25,7 +40,7 @@ RUN apt install ./dicomparser_1.0-1.deb
 COPY 0003.DCM .
 ENV LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu/:/usr/local/jisnalib/"
 ADD dicom_parserstorage dicom_parserstorage
-ENTRYPOINT ["dicom_parserstorage","0003.DCM"]
-# ADD DicomViewer.jar DicomViewer.jar
-# ENTRYPOINT ["java","-jar","/DicomViewer.jar"]
+# ENTRYPOINT ["dicom_parserstorage","0003.DCM"]
+ADD DicomViewer.jar DicomViewer.jar
+ENTRYPOINT ["java","-jar","/DicomViewer.jar"]
 
