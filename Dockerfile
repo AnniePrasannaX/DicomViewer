@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM scratch
 
 # Install OpenJDK-8
 RUN apt-get update && \
