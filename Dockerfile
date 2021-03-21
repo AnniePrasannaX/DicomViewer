@@ -30,6 +30,11 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2
 ENV PATH="/usr/bin/cmake/bin:${PATH}"
 #RUN apt install cmake -y
 RUN apt install libdcmtk2-dev -y
+RUN wget https://repo.mysql.com/apt/ubuntu/pool/mysql-8.0/m/mysql-community/mysql-community-client-plugins_8.0.23-1ubuntu20.04_amd64.deb
+RUN apt install ./mysql-community-client-plugins_8.0.23-1ubuntu20.04_amd64.deb
+RUN wget https://repo.mysql.com/apt/ubuntu/pool/mysql-tools/m/mysql-connector-c++/libmysqlcppconn8-2_8.0.23-1ubuntu20.04_amd64.deb
+RUN apt install ./libmysqlcppconn8-2_8.0.23-1ubuntu20.04_amd64.deb
+RUN apt install libmysqlcppconn-dev mysql-server -y
 #json
 RUN apt-get install -y libjsoncpp-dev
 COPY dicomparser_1.0-1.deb .
