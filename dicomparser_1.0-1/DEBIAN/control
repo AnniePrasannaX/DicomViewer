@@ -1,0 +1,9 @@
+Package: dicomparser
+Version: 1.0-1
+Section: base
+Priority: optional
+Architecture: amd64
+Maintainer: Jisna Siby <jisnasiby09@gmail.com>
+Description: Hello Dicomparser
+ Parsing Dicom File 
+ and Database Storage
