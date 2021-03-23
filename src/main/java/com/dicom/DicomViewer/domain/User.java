@@ -1,3 +1,5 @@
+package com.dicom.DicomViewer.domain;
+
 /**
  * Class User
  * stores value got from database
@@ -6,8 +8,7 @@
  * @since 26-02-2021
  */
 
-/* Package Statement*/
-package com.dicom.DicomViewer.domain;
+
 
 /* import statements*/
 
@@ -105,3 +106,4 @@ public class User {
 	}
 	
 }
+

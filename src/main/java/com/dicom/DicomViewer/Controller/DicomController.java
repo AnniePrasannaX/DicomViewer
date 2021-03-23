@@ -19,30 +19,38 @@ package com.dicom.DicomViewer.Controller;
  * and controller mappings
  */
 import java.io.IOException;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dicom.DicomViewer.domain.User;
+import com.dicom.DicomViewer.domain.User1;
+import com.dicom.DicomViewer.repository.UserRepository;
 import com.dicom.DicomViewer.response.LastLogintimeResponse;
 import com.dicom.DicomViewer.response.LoginResponse;
-import com.dicom.DicomViewer.service.UserService;
-import com.dicom.DicomViewer.repository.UserRepository;
 import com.dicom.DicomViewer.response.PasswordResponse;
 import com.dicom.DicomViewer.response.UploadResponse;
-
+import com.dicom.DicomViewer.service.User1Service;
+//import com.dicom.DicomViewer.service.User2Service;
+import com.dicom.DicomViewer.service.UserService;
+@CrossOrigin(origins="*" , allowedHeaders="*")
 /**
  * Marks a class as Spring MVC,
  * creates a Map of the model object and find a view
@@ -70,14 +78,18 @@ public class DicomController {
 	private UserService userService;
 	@Autowired
 	private UserRepository ur;
+	@Autowired
+	private User1Service user1Service;
+	//@Autowired
+	//private User2Service user2Service;
 	
 	/**
 	 * Method login handles the HTTP POST requests matched with login URI
 	 * @param user
 	 * @return LoginResponse
 	 */
-	
-	@PostMapping("/login")
+	@CrossOrigin(origins="http://localhost:4200")
+	@RequestMapping(method=RequestMethod.POST,value="/login")
 	public LoginResponse login(@ModelAttribute("user")User user) {
 		
 		User us=userService.login(user.getUsername(), user.getPassword());//get the admin credentials from database
@@ -93,6 +105,7 @@ public class DicomController {
 	 * Method time handles the HTTP POST requests matched with lastlogintime URI
 	 * @return LastLogintimeResponse
 	 */
+	@CrossOrigin(origins="http://localhost:4200")
 	@GetMapping("/lastlogintime")
     public LastLogintimeResponse time() {
     	Instant instant = Instant.now();
@@ -108,7 +121,8 @@ public class DicomController {
 	 * @param user
 	 * @return PasswordResponse
 	 */
-    @PostMapping("/settings")
+	@CrossOrigin(origins="http://localhost:4200")
+    @RequestMapping(value="/settings",method=RequestMethod.POST)
 	public PasswordResponse changePass(@RequestParam("oldPass") String oldPass , @RequestParam("newPass") String newPass ,@ModelAttribute("user")User user) {
 		 
 		
@@ -134,13 +148,11 @@ public class DicomController {
 	 * @param file
 	 * @return UploadResponse
 	 */
+	@CrossOrigin(origins="http://localhost:4200")
 	@PostMapping(value="/upload")
-    public UploadResponse singleFileUpload(@RequestParam("file") MultipartFile file){
+    public Iterable<User1> singleFileUpload(@RequestParam("file") MultipartFile file,Model model){
 		
-      if (file.isEmpty()) {  //returns fail message if file uploaded is empty
-          
-          return new UploadResponse("Failed");
-      }
+      
 
       try {
 
@@ -151,9 +163,34 @@ public class DicomController {
           } catch (IOException e) {
           e.printStackTrace();
       }
-
-   return new UploadResponse("Success");   
+      return user1Service.list();
+     
    }
+	
+    
+	
+	@CrossOrigin(origins="http://localhost:4200")
+	@GetMapping("/All") // Map all the patients details
+	public List<User1> getAllPatients() {
+		return user1Service.getAllPatients();
+	}
+
+	@CrossOrigin(origins="http://localhost:4200")
+	@GetMapping("/search") // Map the patient details based on search by id or name
+	public List<User1> viewHomePage(Model model, @Param("keyword") String keyword) {
+		List<User1> listPatients = user1Service.getSearch(keyword);
+		model.addAttribute("listPatients", listPatients);
+		model.addAttribute("keyword", keyword);
+		return listPatients;
+	}
+
+	@CrossOrigin(origins="http://localhost:4200")
+	@RequestMapping("/count") // Map the total number of files
+	
+	public long countEntities() {
+		long count = user1Service.getCountOfEntities();
+		return count;
+	}
 	
 }    
 	
