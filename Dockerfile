@@ -38,7 +38,6 @@ RUN apt install libmysqlcppconn-dev mysql-server -y
 RUN apt-get install -y libjsoncpp-dev
 COPY dicomparser_1.0-1.deb .
 RUN apt install ./dicomparser_1.0-1.deb
-COPY 0003.DCM .
 ENV LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu/:/usr/local/jisnalib/"
 
 ADD DicomViewer.jar DicomViewer.jar
